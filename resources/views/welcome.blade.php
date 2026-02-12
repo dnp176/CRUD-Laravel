@@ -8,7 +8,7 @@
     <div class="bg-white p-8 rounded shadow-md w-96">
         
         <div class="text-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Task List - Production</h2>
+            <h2 class="text-2xl font-bold text-gray-800">Task List - Staging</h2>
             
             <p class="text-sm text-blue-500 mt-1">
                 {{ env('APP_URL') }}
