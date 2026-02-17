@@ -1,27 +1,27 @@
-name: Deploy Development (OIDC)
+name: Deploy Development (OIDC) - Overwrite Tag
 
 on:
   push:
     branches:
-      - development # Development branch push par trigger hoga
+      - development
 
 permissions:
-  id-token: write   # OIDC ke liye ye permission ZAROORI hai
-  contents: read    # Code checkout ke liye
+  id-token: write
+  contents: read
 
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: dnptestaccount/laravel-db-based-app
-  ECS_SERVICE: laravel-app1-service               
-  ECS_CLUSTER: Laravel-Cluster                    
-  ECS_TASK_DEFINITION_FAMILY: laravel-app1-task   
-  CONTAINER_NAME: laravel-app                     
+  ECS_SERVICE: laravel-app1-service
+  ECS_CLUSTER: Laravel-Cluster
+  ECS_TASK_DEFINITION_FAMILY: laravel-app1-task
+  CONTAINER_NAME: laravel-app
 
 jobs:
   deploy:
     name: Deploy Dev
     runs-on: ubuntu-latest
-    environment: development  # Yaha humne wo Environment link kiya jo UI me banaya
+    environment: development
 
     steps:
       - name: Checkout Code
@@ -33,25 +33,25 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # --- CHANGE 1: SIRF DEVELOPMENT TAG PUSH KARENGE ---
       - name: Build and Push Docker Image
         id: build-image
-        env:
-          IMAGE_TAG: ${{ github.sha }}
         run: |
+          # Sirf :development tag build karo
           docker build -t $ECR_REPOSITORY:development .
-          docker tag $ECR_REPOSITORY:development $ECR_REPOSITORY:$IMAGE_TAG
+          
+          # Push kar do (Ye purani image ko overwrite kar dega)
           docker push $ECR_REPOSITORY:development
-          docker push $ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          
+          # Output me fix 'development' tag hi bhejenge
+          echo "image=$ECR_REPOSITORY:development" >> $GITHUB_OUTPUT
 
-      # --- OIDC AUTHENTICATION STEP (No Keys!) ---
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }} # Ye Environment secret se aayega
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # --- Deployment Steps ---
       - name: Download Task Definition
         run: |
           aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > task-definition.json
@@ -62,8 +62,10 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: ${{ env.CONTAINER_NAME }}
+          # Yahan ab hamesha ':development' hi jayega
           image: ${{ steps.build-image.outputs.image }}
 
+      # --- CHANGE 2: FORCE NEW DEPLOYMENT ---
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
@@ -71,3 +73,6 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
+          # Ye important hai: ECS ko force karega ki wo naya deployment start kare
+          # bhale hi image ka naam same (development) kyu na ho.
+          force-new-deployment: true
