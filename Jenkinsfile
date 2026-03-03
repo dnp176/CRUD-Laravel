@@ -12,7 +12,6 @@ pipeline {
       stage('Environment Setup') {
             steps {
                 sh 'cp .env.example .env'
-                sh 'php artisan key:generate'
             }
         }
     }
