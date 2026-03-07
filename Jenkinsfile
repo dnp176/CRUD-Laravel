@@ -23,11 +23,13 @@ pipeline {
                     withSonarQubeEnv('sonar-server') {
 
                         sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=${PROJECT_KEY} \
-                        -Dsonar.projectName=${PROJECT_KEY} \
+                        sonar-scanner \
+                        -Dsonar.projectKey=crud-laravel \
+                        -Dsonar.projectName=crud-laravel \
                         -Dsonar.sources=. \
-                        -Dsonar.sourceEncoding=UTF-8
+                        -Dsonar.host.url=http://172.20.0.12:9000 \
+                        -Dsonar.login=$SONAR_TOKEN \
+                        -Dsonar.profile="Sonar way"
                         """
 
                     }
