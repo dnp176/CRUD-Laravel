@@ -1,37 +1,33 @@
 pipeline {
-agent any
+    agent any
 
-```
-environment {
-    PROJECT_KEY = "crud-laravel"
-}
-
-stages {
-
-    stage('Checkout Code') {
-        steps {
-            checkout scm
-        }
+    environment {
+        PROJECT_KEY = "crud-laravel"
     }
 
-    stage('SonarQube Analysis') {
-        steps {
+    stages {
 
-            script {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
 
-                def scannerHome = tool 'Sonar-Scanner'
+        stage('SonarQube Analysis') {
+            steps {
 
-                withSonarQubeEnv('sonar-server') {
+                script {
 
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    def scannerHome = tool 'Sonar-Scanner'
+
+                    withSonarQubeEnv('sonar-server') {
 
                         sh """
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=${PROJECT_KEY} \
                         -Dsonar.projectName=${PROJECT_KEY} \
                         -Dsonar.sources=. \
-                        -Dsonar.host.url=${SONAR_HOST_URL} \
-                        -Dsonar.login=${SONAR_TOKEN}
+                        -Dsonar.sourceEncoding=UTF-8
                         """
 
                     }
@@ -39,11 +35,7 @@ stages {
                 }
 
             }
-
         }
+
     }
-
-}
-```
-
 }
