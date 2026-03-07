@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        sonarRunner 'Sonar-Scanner'
+    }
+
     environment {
         PROJECT_KEY = "crud-laravel"
     }
@@ -15,6 +19,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
+
                 withSonarQubeEnv('sonar-server') {
 
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
@@ -31,6 +36,7 @@ pipeline {
                     }
 
                 }
+
             }
         }
 
