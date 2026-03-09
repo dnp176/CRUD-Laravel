@@ -25,16 +25,16 @@ pipeline {
 
                         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
 
-                            sh '''
-                            '"${scannerHome}"'/bin/sonar-scanner \
-                            -Dsonar.projectKey='"${PROJECT_KEY}"' \
-                            -Dsonar.projectName='"${PROJECT_NAME}"' \
+                            sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=${PROJECT_KEY} \
+                            -Dsonar.projectName=${PROJECT_NAME} \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url='"${SONAR_HOST_URL}"' \
-                            -Dsonar.token=$SONAR_TOKEN \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.token=${SONAR_TOKEN} \
                             -Dsonar.sourceEncoding=UTF-8 \
                             -Dsonar.exclusions=**/vendor/**,**/node_modules/**,**/storage/**,**/bootstrap/cache/**,**/public/**,**/*.min.js,**/*.log
-                            '''
+                            """
 
                         }
 
