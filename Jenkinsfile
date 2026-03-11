@@ -14,6 +14,7 @@ pipeline {
             }
         }
 
+        /*
         stage('SonarQube Scan') {
             steps {
 
@@ -36,6 +37,21 @@ pipeline {
 
                 }
 
+            }
+        }
+        */
+
+        stage('OWASP Dependency Scan') {
+            steps {
+                sh '''
+                /var/jenkins_home/tools/org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/dependency-check/bin/dependency-check.sh \
+                --project "crud-laravel" \
+                --scan . \
+                --format HTML \
+                --out dependency-check-report \
+                --disableYarnAudit \
+                --disableNodeAudit
+                '''
             }
         }
 
