@@ -66,5 +66,13 @@ pipeline {
             }
         }
 
+        stage('Trivy Image Scan') {
+            steps {
+                sh '''
+                trivy image --severity HIGH,CRITICAL --no-progress $IMAGE_NAME:$IMAGE_TAG
+                '''
+            }
+        }
+
     }
 }
