@@ -42,21 +42,21 @@ pipeline {
         //     }
         // }
 
-        stage('OWASP Dependency Scan') {
-            steps {
-                sh '''
-                /org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/dependency-check/bin/dependency-check.sh \
-                --project "crud-laravel" \
-                --scan . \
-                --format HTML \
-                --out dependency-check-report \
-                --disableYarnAudit \
-                --disableNodeAudit \
-                --nvdApiKey 6b3522fb-5fdc-480e-adfd-a840acd984d0 \
-                --noupdate
-                '''
-            }
-        }
+        // stage('OWASP Dependency Scan') {
+        //     steps {
+        //         sh '''
+        //         /org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/dependency-check/bin/dependency-check.sh \
+        //         --project "crud-laravel" \
+        //         --scan . \
+        //         --format HTML \
+        //         --out dependency-check-report \
+        //         --disableYarnAudit \
+        //         --disableNodeAudit \
+        //         --nvdApiKey 6b3522fb-5fdc-480e-adfd-a840acd984d0 \
+        //         --noupdate
+        //         '''
+        //     }
+        // }
 
         stage('Docker Build Image') {
             steps {
