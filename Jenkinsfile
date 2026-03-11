@@ -4,6 +4,9 @@ pipeline {
     environment {
         PROJECT_KEY = "crud-laravel"
         PROJECT_NAME = "crud-laravel"
+
+        IMAGE_NAME = "dnptestaccount/laravel-db-based-app"
+        IMAGE_TAG = "development"
     }
 
     stages {
@@ -51,6 +54,14 @@ pipeline {
                 --disableNodeAudit \
                 --nvdApiKey 6b3522fb-5fdc-480e-adfd-a840acd984d0 \
                 --noupdate
+                '''
+            }
+        }
+
+        stage('Docker Build Image') {
+            steps {
+                sh '''
+                docker build -t $IMAGE_NAME:$IMAGE_TAG .
                 '''
             }
         }
