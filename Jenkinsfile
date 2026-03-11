@@ -42,13 +42,15 @@ pipeline {
         stage('OWASP Dependency Scan') {
             steps {
                 sh '''
-                /var/jenkins_home/tools/org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/dependency-check/bin/dependency-check.sh \
+                /org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/dependency-check/bin/dependency-check.sh \
                 --project "crud-laravel" \
                 --scan . \
                 --format HTML \
                 --out dependency-check-report \
                 --disableYarnAudit \
-                --disableNodeAudit
+                --disableNodeAudit \
+                --nvdApiKey 6b3522fb-5fdc-480e-adfd-a840acd984d0 \
+                --noupdate
                 '''
             }
         }
