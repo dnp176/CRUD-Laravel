@@ -58,13 +58,13 @@ pipeline {
             //     }
             // }
 
-        stage('Docker Build Image') {
-            steps {
-                sh '''
-                docker build -t $IMAGE_NAME:$IMAGE_TAG .
-                '''
-            }
-        }
+        // stage('Docker Build Image') {
+        //     steps {
+        //         sh '''
+        //         docker build -t $IMAGE_NAME:$IMAGE_TAG .
+        //         '''
+        //     }
+        // }
 
         stage('Trivy Image Scan') {
             steps {
