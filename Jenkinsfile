@@ -74,18 +74,18 @@ pipeline {
             }
         }
 
-        post {
-            failure {
-                sh '''
-                curl -X POST https://n8n.emergencecloudsolutions.cloud/webhook/jenkins-ai \
-                -H "Content-Type: application/json" \
-                -d '{
-                "job_name":"'"$JOB_NAME"'",
-                "build_number":"'"$BUILD_NUMBER"'"
-                }'
-                '''
-            }
-        }
+    }
 
+    post {
+        failure {
+            sh '''
+            curl -X POST https://n8n.emergencecloudsolutions.cloud/webhook/jenkins-ai \
+            -H "Content-Type: application/json" \
+            -d '{
+            "job_name":"'"$JOB_NAME"'",
+            "build_number":"'"$BUILD_NUMBER"'"
+            }'
+            '''
+        }
     }
 }
