@@ -42,29 +42,29 @@ pipeline {
             }
         }
 
-            // stage('OWASP Dependency Scan') {
-            //     steps {
-            //         sh '''
-            //         /var/jenkins_home/tools/org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/dependency-check/bin/dependency-check.sh \
-            //         --project "crud-laravel" \
-            //         --scan . \
-            //         --format HTML \
-            //         --out dependency-check-report \
-            //         --disableYarnAudit \
-            //         --disableNodeAudit \
-            //         --nvdApiKey 6b3522fb-5fdc-480e-adfd-a840acd984d0 \
-            //         --noupdate
-            //         '''
-            //     }
-            // }
+        stage('OWASP Dependency Scan') {
+            steps {
+                sh '''
+                /var/jenkins_home/tools/org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/dependency-check/bin/dependency-check.sh \
+                --project "crud-laravel" \
+                --scan . \
+                --format HTML \
+                --out dependency-check-report \
+                --disableYarnAudit \
+                --disableNodeAudit \
+                --nvdApiKey 6b3522fb-5fdc-480e-adfd-a840acd984d0 \
+                --noupdate
+                '''
+            }
+        }
 
-        // stage('Docker Build Image') {
-        //     steps {
-        //         sh '''
-        //         docker build -t $IMAGE_NAME:$IMAGE_TAG .
-        //         '''
-        //     }
-        // }
+        stage('Docker Build Image') {
+            steps {
+                sh '''
+                docker build -t $IMAGE_NAME:$IMAGE_TAG .
+                '''
+            }
+        }
 
         stage('Trivy Image Scan') {
             steps {
